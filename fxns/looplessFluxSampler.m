@@ -108,17 +108,10 @@ if (sample.loopless)
     if ~isempty(Nint)
         looplessProblem = buildLooplessProblem(tempModel,normMatrixEntries(Nint)');
         [tempModel.lb,tempModel.ub] = generalFVA(looplessProblem,sample.vTol,'loopless');
-        
-        % If there are no possible active loops, then turn-off loopless option and
-        % run simple FVA, not ll-FVA
-    else
-        sample.loopless = 0;
-        LPproblem       = buildLinearProblem(tempModel);
-        [tempModel.lb,tempModel.ub] = generalFVA(LPproblem,sample.vTol);
-    end
-    [tempModel,zeroRxns] = removeBlockedSets(tempModel);
-    rxnList(zeroRxns)    = [];
-    [tempModel,rxnList]  = parseInternalRxns(tempModel,rxnList);
+        [tempModel,zeroRxns] = removeBlockedSets(tempModel);
+        rxnList(zeroRxns)    = [];
+        [tempModel,rxnList]  = parseInternalRxns(tempModel,rxnList);
+    else sample.loopless = 0; end;
     
     % Get an updated sparse null-space matrix of internal rxns (if relevant)
     if sample.loopless
