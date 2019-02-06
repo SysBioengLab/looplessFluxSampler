@@ -84,8 +84,8 @@ else
     if strcmp(sample.algorithm,'ADSB') && isfield(options,'populationScale'); sample.populationScale = options.populationScale;
     else sample.populationScale = 3; end
     
-	% Restart sampler from previous results
-	if ~isfield(model,'points'); sample.points = [];
+    % Restart sampler from previous results
+    if ~isfield(model,'points'); sample.points = [];
     else sample.points = model.points; end
 end
 
