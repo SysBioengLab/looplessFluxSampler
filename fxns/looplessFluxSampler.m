@@ -48,9 +48,9 @@ else
     if isfield(options,'numSamples'); sample.numSamples = options.numSamples;
     else fprintf('Field numSamples has not been defined.'); return; end
 
-    % Samples discarded or burn-in (default empty)
+    % Samples discarded or burn-in (default 0)
     if isfield(options,'numDiscarded'); sample.numDiscarded = options.numDiscarded;
-    else sample.numDiscarded = []; end
+    else sample.numDiscarded = 0; end
 
     % Steps per point (thinning in ACHRB) or number of expected moves (ADSB) (default 1e2)
     if isfield(options,'stepsPerPoint'); sample.stepsPerPoint = options.stepsPerPoint;
