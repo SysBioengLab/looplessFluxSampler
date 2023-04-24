@@ -1,5 +1,5 @@
 % Example1. Benchamark of ADSB against ll-ACHRB
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 clearvars,clc
 addpath('fxns','test model');
 
