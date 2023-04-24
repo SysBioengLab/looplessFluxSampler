@@ -25,7 +25,7 @@ function looplessProblem = buildLooplessProblem(model,Nint)
 % OUTPUT:
 %              looplessProblem (structure):   MILP problem structure
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Determine number of internal reactions and define bounds
 m      = numel(model.intRxns);
