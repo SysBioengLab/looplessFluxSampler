@@ -12,7 +12,7 @@ function A = normMatrixEntries(A)
 % OUTPUT:
 %              A - m x n  normalized sparse basis matrix
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 A(~A) = inf;                                   % Change zeros for inf
 A     = bsxfun(@rdivide,A,min(abs(A)));        % Extract topological features by diving for smallest non-zero flux
