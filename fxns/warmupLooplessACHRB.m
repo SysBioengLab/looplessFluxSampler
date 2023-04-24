@@ -24,7 +24,7 @@ function warmupPoints = warmupLooplessACHRB(sample,vTol)
 % OUTPUT:
 %              warmupPoints:  Set of (loopless) flux solutions
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Define number of warmup points
 if (nargin<2); vTol = 1e-8; end
