@@ -20,7 +20,7 @@ function [model,zeroRxns] = removeBlockedSets(model)
 % OPTIONAL OUTPUT:
 %              zeroRxns:  k x 1 Index vector of blocked rxns
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 zeroRxns = find((model.ub==0)&(model.lb==0));
 if ~isempty(zeroRxns)
