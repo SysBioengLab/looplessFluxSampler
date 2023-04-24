@@ -26,7 +26,7 @@ function [R,Rint,Neff,tau,thin] = psrf(varargin)
 %              thin:  Geyer's initial positive sequence lag. Useful for
 %                     estimating an `optimal` thinning factor (1 x D vector)
 %
-% -------------------- Adapted on 2019 by Pedro A. Saa --------------------
+% -------------------- Adapted on 2023 by Pedro A. Saa --------------------
 
 X   = cat(3,varargin{:});
 mid = floor(size(X,1)/2);
