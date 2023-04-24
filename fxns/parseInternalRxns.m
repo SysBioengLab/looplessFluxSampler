@@ -20,7 +20,7 @@ function [model,rxnList] = parseInternalRxns(model,rxnList)
 % OPTIONAL OUTPUT:
 %              rxnList:  k x 1 Updated rxnList
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 if (nargin<2); rxnList = []; end
 
