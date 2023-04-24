@@ -19,7 +19,7 @@ function LPproblem = buildLinearProblem(model)
 % OUTPUT:
 %              LPproblem (structure):   LP problem structure
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Create new model structure
 LPproblem.b = zeros(size(model.S,1),1);
