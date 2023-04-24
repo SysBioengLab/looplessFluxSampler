@@ -1,4 +1,4 @@
-% Example1. Benchamark of ADSB against ll-ACHRB
+% Example 1. Benchamark of ADSB against ll-ACHRB
 % -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 clearvars,clc
 addpath('fxns','test model');
