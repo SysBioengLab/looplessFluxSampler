@@ -15,7 +15,7 @@ function nSteps = getNumberSteps(nTimes,nDim,ptarget)
 % OUTPUT:
 %              nSteps    Number of Matrix with numRxns x numSamples (loopless) flux solutions
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 p_mov      = 1/nDim;                                                       % Probability of choosing a member from the population
 nSteps     = 5*nTimes;                                                     % Initial nSteps guess
