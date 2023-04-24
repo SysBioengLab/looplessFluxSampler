@@ -35,7 +35,7 @@ function [minFlux,maxFlux,Vmin,Vmax] = generalFVA(optProblem,vTol,type)
 %              Vmin:   n x n Flux matrix with the solutions associated to minFlux
 %              Vmax:   n x n Flux matrix with the solutions associated to maxFlux
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Define parameters and type of FVA optimization
 if (nargin<2)
