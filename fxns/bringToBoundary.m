@@ -14,7 +14,7 @@ function points = bringToBoundary(points,lb,ub)
 % OUTPUT:
 %              points:  n x p Matrix of points inside the feasible region
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 points = bsxfun(@times,bsxfun(@gt,points,ub),ub) + bsxfun(@times,~bsxfun(@gt,points,ub),points);
 points = bsxfun(@times,bsxfun(@lt,points,lb),lb) + bsxfun(@times,~bsxfun(@lt,points,lb),points);
