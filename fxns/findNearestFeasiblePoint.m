@@ -30,7 +30,7 @@ function vFeasible = findNearestFeasiblePoint(model,vInfeasible,Nint,vTol)
 % OUTPUT:
 %              vFeasible:   n x 1 feasible flux vector
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Handle missing inputs
 if (nargin<4); vTol = 1e-8; end
