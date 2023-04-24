@@ -31,7 +31,7 @@ function [points,samplingTime] = ADSB(sample,verbose)
 % OPTIONAL OUTPUT:
 %              samplingTime:   Runtime of EDHRB
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Check input arguments
 if nargin<2; verbose = 1; end
