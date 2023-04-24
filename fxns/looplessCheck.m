@@ -16,7 +16,7 @@ function isFeasible = looplessCheck(points,sample)
 % OUTPUT:
 %              isFeasible:  1 x k boolean vector
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 loopyFlux = false(1,size(points,2));
 for ix = 1:numel(sample.nnzEntries)
