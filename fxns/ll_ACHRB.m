@@ -33,7 +33,7 @@ function [points,samplingTime,centroid,cWeight,rejectionRate] = ll_ACHRB(sample,
 %              rejectionRate:  Rejection rate estimated by the number of
 %                              times the `hyperbox` is shrunk
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Check inputs
 if nargin<4; disp('Not enough input parameters'); return; end
