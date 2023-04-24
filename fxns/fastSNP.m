@@ -23,7 +23,7 @@ function Nsnp = fastSNP(S,lb,ub,vTol)
 % OUTPUT:
 %              Nsnp: n x (n-rank(S)) matrix with a sparse null space basis
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Define solver parameters
 if nargin<3
