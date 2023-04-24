@@ -1,5 +1,5 @@
-% Example2. Use samples from a previous run of ADSB for constructing the initial current set 
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% Example 2. Use samples from a previous run of ADSB for constructing the initial current set 
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 clearvars,clc
 addpath('fxns','test model');
 
