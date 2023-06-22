@@ -32,6 +32,7 @@ function sample = looplessFluxSampler(model,options)
 %              sample (structure):   sampling structure containing #numSamples random points
 %
 % -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
+disp('Running')
 
 % Check inputs
 if (nargin<2)
