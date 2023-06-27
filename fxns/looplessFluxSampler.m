@@ -19,7 +19,7 @@ function sample = looplessFluxSampler(model,options)
 %              options (structure):  (the following fields are optional)
 %                                    * numDiscarded - Burn-in (double) (only used in ll-ACHRB) (default 0)
 %                                    * stepsPerPoint - Thinning or number of steps per effective point (double). In ADSB, it refers to the expected number of times a point is moved 
-%                                    * algorithm - 'ADSB' (default) or 'll_ACHRB'
+%                                    * algorithm - 'ADSB' (default) or 'll_ACHRB' or 'HRB'
 %                                    * loopless - Loop removal flag, true (default) or false
 %                                    * vTol - Numerical flux tolerance (default 1e-8)
 %                                    * parallelFlag - Parallel sampling option, false (default) or true
@@ -56,7 +56,7 @@ else
     if isfield(options,'stepsPerPoint'); sample.stepsPerPoint = options.stepsPerPoint;
     else sample.stepsPerPoint = 1e2; end
 
-    % Sampling algorithm 'ADSB' (default) or 'll_ACHRB'
+    % Sampling algorithm 'ADSB' (default) or 'll_ACHRB' or 'HRB'
     if isfield(options,'algorithm'); sample.algorithm = options.algorithm;
     else sample.algorithm = 'ADSB'; end
 
@@ -84,8 +84,8 @@ else
     if strcmp(sample.algorithm,'ADSB') && isfield(options,'populationScale'); sample.populationScale = options.populationScale;
     else sample.populationScale = 3; end
     
-    % Restart sampler from previous results
-    if ~isfield(model,'points'); sample.points = [];
+	% Restart sampler from previous results
+	if ~isfield(model,'points'); sample.points = [];
     else sample.points = model.points; end
 end
 
@@ -256,6 +256,9 @@ if ~sample.parallelFlag
         fprintf('Sampling in progress (single core)...\n--------------------------------------------\n');
         [sample.points,sample.samplingTime,sample.centroid] = ll_ACHRB(sample,sample.numSamples,sample.numDiscarded,sample.stepsPerPoint);
         if isempty(sample.points); return; end
+    elseif strcmp(sample.algorithm,'HRB')
+        fprintf('Sampling in progress (single core)...\n--------------------------------------------\n');
+        [sample.points,sample.samplingTime,sample.rejectionRate] = HRB(sample,sample.numSamples,sample.numDiscarded,sample.stepsPerPoint);
     end
 else
     % Delete active workers
@@ -365,8 +368,10 @@ if sample.diagnostics
     sample.points = sample.points(:,1:sample.numSamples);
     
     % Calculate chains statistics
-    sample.mu    = mean(sample.points,2);
-    sample.sigma = std(sample.points')';
+    sample.mu     = mean(sample.points,2);
+    sample.sigma  = std(sample.points')';
+    sample.median = median(sample.points,2);
+    sample.IQR    = iqr(sample.points,2);
     
     % Check if there are exclusive topological modes
     if (sample.loopless)
