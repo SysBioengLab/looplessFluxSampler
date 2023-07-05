@@ -22,14 +22,11 @@ function [points,samplingTime] = ADSB(sample,verbose)
 %                                    * keepWithinBounds - Fxn handle for bringToBoundary.m fxn
 %                                    * isFeasible - Fxn handle for looplessCheck.m fxn
 %
-% OPTIONAL INPUTS:
-%              workerIdx:  id of the working processor, 1 (default)
-%
 % OUTPUT:
 %              points:   Matrix with numRxns x numSamples (loopless) flux solutions
 %
 % OPTIONAL OUTPUT:
-%              samplingTime:   Runtime of EDHRB
+%              samplingTime:   Runtime of ADSB
 %
 % -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
@@ -49,7 +46,7 @@ udir      = zeros(size(points));
 currPoint = udir;
 nextPoint = currPoint;
 
-% Figure out number of steps
+% Figure out number of steps and pre-allocate
 nTimes    = sample.stepsPerPoint;                                                     % Number of times we expect to move a particle (e.g. 100)
 ptarget   = .99;                                                                      % Probability (target) of moving a member at least nTimes (e.g. 99%)
 nSteps    = getNumberSteps(nTimes,nDim,ptarget);
@@ -65,7 +62,9 @@ negStep = zeros(1,sample.numChains);
 % Start clock and sampler
 iterSample = 0;
 t0         = cputime;                                                                   % Start clock
-if (verbose==1); fprintf('%%Prog \t Time \t Time left\n---------------------------\n'); end
+if (verbose==1)
+    fprintf('---------------------------\n%%Prog \t Time \t Time left\n---------------------------\n');
+end
 while (iterSample <= nSteps(end))
     
     % Update general counter
@@ -151,4 +150,3 @@ while (iterSample <= nSteps(end))
     idx_prev = idx_next;
 end
 samplingTime = (cputime-t0)/60;
-if (verbose==1); fprintf('---------------------------\nSampling finalized.\n'); end

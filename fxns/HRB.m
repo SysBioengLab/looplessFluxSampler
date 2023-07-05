@@ -1,63 +1,59 @@
-function [points,samplingTime,rejectionRate] = HRB(sample,numSamples,numDiscarted,stepsPerPoint,verbose,workerIdx)
-% Hit and Run on a Box
+function [points,samplingTime,rejectionRate] = HRB(sample,numSamples,numDiscarted,stepsPerPoint,verbose,workerIdx,initPoint)
+% Hit and Run on a Box algorithm
 %
-% Uses HRB to generate a random sample from the loopless flux solution
-% space
+% Implements the HRB to generate a uniform random (loopless) flux sample
 %
 % USAGE:
 %              points = HRB(sample,numSamples,numDiscarted,stepsPerPoint)
 %
 % INPUTS:
 %              sample (structure):    (the following fields are required - others can be supplied)
+%                                    * COBRA model structure fields (S, ub, lb)
 %                                    * centroid - Initial centroid estimation
-%                                    * warmupPoints:  Set of (loopless) flux solutions (2 x n)
 %                                    * isFeasible - Fxn handle for looplessCheck.m fxn
 %                                    * loopless - Loop removal option, true (default) or false
 %              numSamples:           Number of points to sample
 %              numDiscarded:         Burn-in (double)
-%              stepsPerPoint:        Thining (double)
+%              stepsPerPoint:        Thinning (double)
 %
-% OPTIONAL INPUTS:
+% OPTIONAL INPUTS:               
 %              verbose:    Display progress of sampling run, true (default) or false
 %              workerIdx:  ID of the working processor, 1 (default)
-%              cWeight:    Cumulative centroid weight from previous
-%                          iterations
+%              initPoint:  Initial point, centroid (default)  
 %
 % OUTPUT:
 %              points:   Matrix with n x numSamples (loopless) flux solutions
 %
 % OPTIONAL OUTPUT:
-%              samplingTime:   Runtime of ll-ACHRB
-%              centroid:       Estimated centroid
-%              cWeight:        Cumulative centroid weight
+%              samplingTime:   Runtime of HRB
 %              rejectionRate:  Rejection rate estimated by the number of
-%                              times the `hyperbox` is shrunk
+%                              times the 'hyperbox' is shrunk
 %
-% -------------------- Copyright (C) 2019 Pedro A. Saa --------------------
+% -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
 % Check inputs
 if nargin<4; disp('Not enough input parameters'); return; end
 
-% Hit-And-Run parameters set-up
+% Set up Hit-And-Run parameters
 t0 = cputime;
 if nargin<5
-    verbose   = true;
+    verbose   = true;    
     workerIdx = 1;
-elseif nargin<6
+    initPoint = sample.centroid;
+elseif nargin<6    
     workerIdx = 1;
+    initPoint = sample.centroid;
+elseif nargin<7
+    initPoint = sample.centroid;
 end
 
-% Set-up HRB parameters
-prevPoint = sample.centroid;
-
-% Allocating memory for the next points
+% Allocating memory for the sampling points
 nRxns  = size(sample.S,2);
 points = zeros(nRxns,numSamples);
 N      = null(full(sample.S));
 P_N    = N*N';                         % Build projection matrix onto null(S)
 [~,colsInd] = rref(sample.S);
 colsDep = find(~ismember(1:size(sample.S,2),colsInd));
-% fVars   = numel(colsInd);
 fVars   = numel(colsDep);
 Ns      = -full(pinv(sample.S(:,colsInd))*sample.S(:,colsDep));
 
@@ -65,6 +61,9 @@ Ns      = -full(pinv(sample.S(:,colsInd))*sample.S(:,colsDep));
 uTol      = sample.uTol;               % Direction tolerance
 maxMinTol = sample.bTol;               % Min distance to closest bound
 dTol      = sample.bTol;               % Max discrepancy with equality constraints
+
+% Set initial point
+prevPoint = initPoint;
 
 % Initialize counters
 counter       = 0;
@@ -74,7 +73,11 @@ rejectedCount = 0;
 rejectionRate = 0;
 
 % Main loop
-if verbose && (workerIdx==1); fprintf('%%Prog \t Time \t Time left \t Rejection rate\n--------------------------------------------\n'); end;
+if (verbose==1) && (workerIdx==1)
+    countReport  = 1;
+    sampleReport = 0;
+    fprintf('--------------------------------------------\n%%Prog \t Time \t Time left \t Rejection rate\n--------------------------------------------\n');
+end
 while sampleCount<numSamples
 
     % Update count
@@ -82,16 +85,16 @@ while sampleCount<numSamples
     rejectionRate = rejectedCount/totalCount;
 
     % Print step information
-    if verbose && (workerIdx==1)
-        if totalCount>1
-            timeElapsed = (cputime-t0)/60;
-            timePerStep = timeElapsed/sampleCount;
-            if ~mod(totalCount,500*stepsPerPoint) && counter>0
-                fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(1e2*sampleCount/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,rejectionRate);
-            elseif ~mod(totalCount,500*stepsPerPoint) && counter==0
-                fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(1e2*sampleCount/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,1);
-            end
+    if (verbose==1) && (workerIdx==1) && (sampleReport==sampleCount)
+        timeElapsed  = (cputime-t0)/60;
+        timePerStep  = timeElapsed/sampleCount;        
+        if  (counter>0)            
+            fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(100*sampleReport/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,rejectionRate);
+        elseif (counter==0)
+            fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(100*sampleReport/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,1);
         end
+        countReport  = countReport+1;
+        sampleReport = min([numSamples,countReport*round(numSamples/20)]);
     end
 
     % Return if the dynamics is frozen
@@ -100,7 +103,7 @@ while sampleCount<numSamples
         points = []; break;
     end
 
-    % Sample random direction
+    % Sample random direction (Marsaglia method)
     u = zeros(sample.numRxns,1);
     u(colsDep) = randn(fVars,1);
     u(colsInd) = Ns*u(colsDep);
@@ -233,4 +236,3 @@ while sampleCount<numSamples
     end
 end
 samplingTime = (cputime-t0)/60;
-if verbose && (workerIdx==1); fprintf('--------------------------------------------\n'); end;

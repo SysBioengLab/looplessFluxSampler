@@ -75,7 +75,11 @@ rejectedCount = 0;
 rejectionRate = 0;
 
 % Main loop
-if verbose && (workerIdx==1); fprintf('%%Prog \t Time \t Time left \t Rejection rate\n--------------------------------------------\n'); end
+if (verbose==1) && (workerIdx==1)
+    countReport  = 1;
+    sampleReport = 0;
+    fprintf('--------------------------------------------\n%%Prog \t Time \t Time left \t Rejection rate\n--------------------------------------------\n');
+end
 while sampleCount<numSamples
 
     % Update count
@@ -83,16 +87,16 @@ while sampleCount<numSamples
     rejectionRate = rejectedCount/totalCount;
 
     % Print step information
-    if verbose && (workerIdx==1)
-        if totalCount>1
-            timeElapsed = (cputime-t0)/60;
-            timePerStep = timeElapsed/sampleCount;
-            if ~mod(totalCount,500*stepsPerPoint) && counter>0
-                fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(1e2*sampleCount/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,rejectionRate);
-            elseif ~mod(totalCount,500*stepsPerPoint) && counter==0
-                fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(1e2*sampleCount/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,1);
-            end
+    if (verbose==1) && (workerIdx==1) && (sampleReport==sampleCount)
+        timeElapsed  = (cputime-t0)/60;
+        timePerStep  = timeElapsed/sampleCount;        
+        if  (counter>0)            
+            fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(100*sampleReport/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,rejectionRate);
+        elseif (counter==0)
+            fprintf('%d\t%8.2f\t%8.2f\t%8.2f\n',round(100*sampleReport/numSamples),timeElapsed,(numSamples-sampleCount)*timePerStep,1);
         end
+        countReport  = countReport+1;
+        sampleReport = min([numSamples,countReport*round(numSamples/20)]);
     end
 
     % Return if the dynamics is frozen
@@ -240,4 +244,3 @@ while sampleCount<numSamples
     end
 end
 samplingTime = (cputime-t0)/60;
-if verbose && (workerIdx==1); fprintf('--------------------------------------------\n'); end
