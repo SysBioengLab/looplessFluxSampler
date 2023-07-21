@@ -1,7 +1,7 @@
 % Plot figures.
 % -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 
-% Load data (run example3.m previously)
+% Load data for figure 2, S1 and S2 (run example3.m previously)
 load('samples\R0.mat',"R0")
 load('samples\R2.mat',"R2")
 load('samples\R10.mat',"R10")
@@ -11,17 +11,15 @@ load('samples\R2_HRB.mat',"R2_HRB")
 load('samples\R10_HRB.mat',"R10_HRB")
 load('samples\R12_HRB.mat',"R12_HRB")
 
-%% Figure 1 (Under development)
-
-% timePerNeff_m1_ADSB = m1_ADSB.samplingTime./m1_ADSB.Neff';
-% timePerNeff_m2_ADSB = m1_ADSB.samplingTime./m1_ADSB.Neff';
-% timePerNeff_m3_ADSB = m1_ADSB.samplingTime./m1_ADSB.Neff';
-% timePerNeff_m4_ADSB = m1_ADSB.samplingTime./m1_ADSB.Neff';
-% timePerNeff_m1_llACHRB = m1_llACHRB.samplingTime./m1_llACHRB.Neff';
-% timePerNeff_m2_llACHRB = m2_llACHRB.samplingTime./m2_llACHRB.Neff';
-% timePerNeff_m3_llACHRB = m3_llACHRB.samplingTime./m3_llACHRB.Neff';
-% timePerNeff_m4_llACHRB = m4_llACHRB.samplingTime./m4_llACHRB.Neff';
-
+% Load data for figure 3
+load("samples\m1_ADSB.mat","m1_ADSB")          % model: e_coli_core
+load("samples\m1_llACHRB.mat","m1_llACHRB")    % model: e_coli_core
+load("samples\m2_ADSB.mat","m2_ADSB")          % model: iIT341
+load("samples\m2_llACHRB.mat","m2_llACHRB")    % model: iIT341
+load("samples\m3_ADSB.mat","m3_ADSB")          % model: iYO844
+load("samples\m3_llACHRB.mat","m3_llACHRB")    % model: iYO844
+load("samples\m4_ADSB.mat","m4_ADSB")          % model: iMM904
+load("samples\m4_llACHRB.mat","m4_llACHRB")    % model: iMM904
 
 %% Figure 2
 figure()
@@ -93,6 +91,100 @@ legend('HR','ADSB','location','NorthWest','FontSize',8);
 axis([.5,4.5,0,4])
 title('C');
 ax(3).TitleHorizontalAlignment = 'Left';
+xlabel('Model')
+ylabel('Potential Scale Redution Factor (psrf)')
+
+%% Figure 3
+
+figure()
+tiledlayout(1,2)
+% Time per Neff (left)
+x1 = m1_llACHRB.samplingTime./m1_llACHRB.Neff';
+x2 = m1_ADSB.samplingTime./m1_ADSB.Neff';
+x3 = m2_llACHRB.samplingTime./m2_llACHRB.Neff';
+x4 = m2_ADSB.samplingTime./m2_ADSB.Neff';
+x5 = m3_llACHRB.samplingTime./m3_llACHRB.Neff';
+x6 = m3_ADSB.samplingTime./m3_ADSB.Neff';
+x7 = m4_llACHRB.samplingTime./m4_llACHRB.Neff';
+x8 = m4_ADSB.samplingTime./m4_ADSB.Neff';
+
+group = [ones(numel(x1),1);2*ones(numel(x2),1);3*ones(numel(x3),1);4*ones(numel(x4),1);...
+            5*ones(numel(x5),1);6*ones(numel(x6),1);7*ones(numel(x7),1);8*ones(numel(x8),1)];
+
+positions = [.85,1.15,1.85,2.15,2.85,3.15,3.85,4.15];
+
+ax(1) = nexttile(1);
+boxplot(([x1;x2;x3;x4;x5;x6;x7;x8]),group,'positions', positions,'symbol','');
+
+set(gca,'YScale','log')
+set(gca,'xtick',[mean(positions(1:2)) mean(positions(3:4)) mean(positions(5:6)) mean(positions(7:8))])
+set(gca,'xticklabel',{'E. coli core','iIT341','iYO844','iMM904'})
+
+color = [1,0.41,0.16;...
+         0,0.45,0.74;...
+         1,0.41,0.16;...
+         0,0.45,0.74;...
+         1,0.41,0.16;...
+         0,0.45,0.74;...
+         1,0.41,0.16;...
+         0,0.45,0.74];
+h = findobj(gca,'Tag','Box');
+for j=1:length(h)
+   patch(get(h(j),'XData'),get(h(j),'YData'),color(j,:),'FaceAlpha',.9);
+end
+c = get(gca,'Children');
+
+hleg1 = legend(c(1:2),'ll-ACHRB','ADSB');
+legend('Location','northwest')
+axis([.5,4.5,10^-6,10^1])
+title('A');
+ax(1).TitleHorizontalAlignment = 'Left';
+lines = findobj(gcf, 'type', 'line', 'Tag', 'Median');
+set(lines, 'Color', 'k');
+xlabel('Model')
+ylabel('Time per effective sample')
+
+% Potential scale reduction factor (right)
+x1 = m1_llACHRB.R';
+x2 = m1_ADSB.R';
+x3 = m2_llACHRB.R';
+x4 = m2_ADSB.R';
+x5 = m3_llACHRB.R';
+x6 = m3_ADSB.R';
+x7 = m4_llACHRB.R';
+x8 = m4_ADSB.R';
+
+group = [ones(numel(x1),1);2*ones(numel(x2),1);3*ones(numel(x3),1);4*ones(numel(x4),1);...
+            5*ones(numel(x5),1);6*ones(numel(x6),1);7*ones(numel(x7),1);8*ones(numel(x8),1)];
+
+positions = [.85,1.15,1.85,2.15,2.85,3.15,3.85,4.15];
+
+ax(2) = nexttile(2);
+boxplot([x1;x2;x3;x4;x5;x6;x7;x8],group,'positions', positions,'symbol','');
+bar(positions([1,3,5,7]),[mean(x1),mean(x3),mean(x5),mean(x7)],.15,'FaceColor',[0,0.45,0.74]);
+hold on
+bar(positions([2,4,6,8]),[mean(x2),mean(x4),mean(x6),mean(x8)],.15,'FaceColor',[1,0.41,0.16]);
+
+p1 = prctile(x1,[2.5,97.5]);
+p2 = prctile(x2,[2.5,97.5]);
+p3 = prctile(x3,[2.5,97.5]);
+p4 = prctile(x4,[2.5,97.5]);
+p5 = prctile(x5,[2.5,97.5]);
+p6 = prctile(x6,[2.5,97.5]);
+p7 = prctile(x7,[2.5,97.5]);
+p8 = prctile(x8,[2.5,97.5]);
+
+errorbar(positions,[mean(x1),mean(x2),mean(x3),mean(x4),mean(x5),mean(x6),mean(x7),mean(x8)],...
+    [p1(1),p2(1),p3(1),p4(1),p5(1),p6(1),p7(1),p8(1)]-[mean(x1),mean(x2),mean(x3),mean(x4),mean(x5),mean(x6),mean(x7),mean(x8)],...
+    [p1(2),p2(2),p3(2),p4(2),p5(2),p6(2),p7(2),p8(2)]-[mean(x1),mean(x2),mean(x3),mean(x4),mean(x5),mean(x6),mean(x7),mean(x8)],'.k')
+
+set(gca,'xtick',[mean(positions(1:2)) mean(positions(3:4)) mean(positions(5:6)) mean(positions(7:8))])
+set(gca,'xticklabel',{'E. coli core','iIT341','iYO844','iMM904'})
+
+legend('ll-ACHRB','ADSB','location','NorthWest','FontSize',8);
+axis([.5,4.5,0,4])
+title('B');
+ax(2).TitleHorizontalAlignment = 'Left';
 xlabel('Model')
 ylabel('Potential Scale Redution Factor (psrf)')
 
