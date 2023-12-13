@@ -2,7 +2,7 @@
 %
 % -------------------- Copyright (C) 2023 Pedro A. Saa --------------------
 clearvars,clc
-addpath('fxns','.\scripts for paper\test model');
+addpath('fxns','models');
 
 % Initialize COBRA toolbox
 try
