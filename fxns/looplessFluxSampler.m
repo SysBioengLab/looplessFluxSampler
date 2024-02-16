@@ -122,7 +122,7 @@ rxnList(zeroRxns)    = [];
 if (sample.loopless)
     
     % Get a sparse null-space matrix of internal rxns
-    Nint = fastSNP(tempModel.S(:,tempModel.intRxns),-1e2*(tempModel.lb(tempModel.intRxns)<0),...
+    Nint = fast_snp(tempModel.S(:,tempModel.intRxns),-1e2*(tempModel.lb(tempModel.intRxns)<0),...
         1e2*(tempModel.ub(tempModel.intRxns)>0),sample.vTol);
     if ~isempty(Nint)
         looplessProblem = buildLooplessProblem(tempModel,normMatrixEntries(Nint)');
@@ -141,7 +141,7 @@ if (sample.loopless)
     
     % Get an updated sparse null-space matrix of internal rxns (if relevant)
     if sample.loopless
-        Nint = fastSNP(tempModel.S(:,tempModel.intRxns),-1e2*(tempModel.lb(tempModel.intRxns)<0),...
+        Nint = fast_snp(tempModel.S(:,tempModel.intRxns),-1e2*(tempModel.lb(tempModel.intRxns)<0),...
             1e2*(tempModel.ub(tempModel.intRxns)>0),sample.vTol);
         if ~isempty(Nint); Nint = normMatrixEntries(Nint);
         else sample.loopless = 0; end

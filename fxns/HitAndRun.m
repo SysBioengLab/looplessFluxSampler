@@ -51,7 +51,7 @@ end
 % Allocating memory for the sampling points
 nRxns  = size(sample.S,2);
 points = zeros(nRxns,numSamples);
-% N      = fastSNP(sample.S,sample.lb,sample.ub,sample.vTol);
+% N      = fast_snp(sample.S,sample.lb,sample.ub,sample.vTol);
 N      = null(sample.S,'r');
 N      = bsxfun(@rdivide,N,sqrt(sum(N.^2,1)));
 fVars  = size(N,2);
