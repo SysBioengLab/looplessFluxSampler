@@ -7,4 +7,3 @@ Saa PA, Zapararte S, Drovandi CC, Nielsen LK. LooplessFluxSampler: An efficient 
 Requirements
 - COBRA Toolbox v3.0 (https://github.com/opencobra/cobratoolbox)
 - Parallel Computing Toolbox (only necessary for parallel sampling)
-- Statistics and Machine Learning Toolbox
