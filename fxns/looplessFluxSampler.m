@@ -235,12 +235,12 @@ if strcmp(sample.algorithm,'ADSB')
     if isempty(sample.points)
         sample.points = zeros(sample.numRxns,nDim,sample.numChains);
         for ix = 1:sample.numChains
-            sample.points(:,:,ix) = prevPoints(:,randsample(size(prevPoints,2),nDim,'false'));
+            sample.points(:,:,ix) = prevPoints(:,sampleSet(size(prevPoints,2),nDim,'false'));
         end
     else
         extraPoints = sample.pointsPerChain*sample.numChains-sample.numSamples;
         if (extraPoints ~= 0)
-            extraPoints = prevPoints(:,randsample(size(prevPoints,2),extraPoints,'false'));
+            extraPoints = prevPoints(:,sampleSet(size(prevPoints,2),extraPoints,'false'));
             prevPoints   = [prevPoints,extraPoints];
         end
         prevPoints = reshape(prevPoints,sample.numRxns,nDim,sample.numChains);
